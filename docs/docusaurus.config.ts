@@ -49,8 +49,8 @@ const config: Config = {
     navbar: {
       title: "AcmeEval",
       logo: {
-        alt: "My Site Logo",
-        src: "img/logo.svg",
+        alt: "Acme logo",
+        src: "img/logo.png",
       },
       items: [
         {

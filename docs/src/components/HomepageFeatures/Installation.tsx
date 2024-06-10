@@ -23,7 +23,7 @@ export const Installation = () => {
           <div className="mx-auto w-full max-w-sm space-y-4">
             <pre className="bg-white dark:bg-gray-950 rounded-lg p-4 text-left">
               <code className="text-[#535C91] font-mono">
-                npm install @acmeeval/core
+                npm install @acme/eval
               </code>
             </pre>
             <p className="text-xs text-gray-500 dark:text-gray-400">
