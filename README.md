@@ -1,7 +1,3 @@
-Based on the provided files, here's a suggested README for your project:
-
----
-
 # AcmeEval: Opinionated RAG Evaluation Framework
 
 AcmeEval is a TypeScript library designed to simplify and swiftly handle RAG (Retrieval-Augmented Generation) evaluation. This framework offers a streamlined solution for testing and measuring the performance of your RAG systems.
