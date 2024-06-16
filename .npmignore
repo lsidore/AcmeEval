@@ -1,0 +1,7 @@
+dist/
+node_modules/
+src/
+
+.DS_Store
+tsconfig.json
+tsup.config.ts
