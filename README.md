@@ -8,14 +8,14 @@ AcmeEval is a TypeScript library designed to simplify and swiftly handle RAG (Re
 To install AcmeEval, you can use npm or yarn:
 
 ```bash
-npm install @acme/eval
+npm install @acme-eval/core
 # or
-yarn add @acme/eval
+yarn add @acme-eval/core
 ```
 
 ## Documentation
 
-For more information about AcmeEval, please visit our [documentation]().
+For more information about AcmeEval, please visit our [documentation](https://lsidore.github.io/AcmeEval/docs/intro).
 
 ## License
 
