@@ -11,6 +11,7 @@ const config: Config = {
   baseUrl: "/AcmeEval/",
   organizationName: "lsidore",
   projectName: "AcmeEval",
+  trailingSlash: true,
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   i18n: {
