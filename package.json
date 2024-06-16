@@ -1,38 +1,48 @@
 {
-  "name": "@acme-eval/core",
-  "version": "0.0.2",
-  "description": "Opinionated framework that offers a simple and swift solution for RAG evaluation",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "build": "tsup"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lsidore/AcmeEval.git"
-  },
-  "keywords": [
-    "rag",
-    "llm",
-    "evaluation",
-    "test",
-    "typescript"
-  ],
-  "author": "lsidore",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/lsidore/AcmeEval/issues"
-  },
-  "homepage": "https://lsidore.github.io/AcmeEval/",
-  "devDependencies": {
-    "tsup": "^8.1.0",
-    "typescript": "^5.4.5"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@acme-eval/core",
+	"version": "0.0.2",
+	"description": "Opinionated framework that offers a simple and swift solution for RAG evaluation",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"directories": {
+		"doc": "docs"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "jest",
+		"test:watch": "jest --watch"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/lsidore/AcmeEval.git"
+	},
+	"keywords": [
+		"rag",
+		"llm",
+		"evaluation",
+		"test",
+		"typescript"
+	],
+	"author": "lsidore",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/lsidore/AcmeEval/issues"
+	},
+	"homepage": "https://lsidore.github.io/AcmeEval/",
+	"devDependencies": {
+		"@types/jest": "^29.5.12",
+		"jest": "^29.7.0",
+		"prettier": "3.3.2",
+		"ts-jest": "^29.1.5",
+		"tsup": "^8.1.0",
+		"typescript": "^5.4.5"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"dirty-json": "^0.9.2",
+		"ollama": "^0.5.2"
+	}
 }
