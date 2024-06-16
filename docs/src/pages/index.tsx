@@ -3,8 +3,6 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import { HomepageFeatures } from "../components/HomepageFeatures";
 
-const links = [];
-
 const HomepageHeader = () => (
   <header className="w-full py-12 md:py-24 lg:py-32 bg-[#535C91] text-white">
     <div className="container px-4 md:px-6">
@@ -29,26 +27,6 @@ const HomepageHeader = () => (
     </div>
   </header>
 );
-
-function CodeIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="16 18 22 12 16 6" />
-      <polyline points="8 6 2 12 8 18" />
-    </svg>
-  );
-}
 
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();

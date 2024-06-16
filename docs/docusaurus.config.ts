@@ -5,33 +5,19 @@ import tailwindPlugin from "./plugins/tailwind-plugin.cjs";
 
 const config: Config = {
   title: "AcmeEval",
-  tagline: "Dinosaurs are cool",
+  tagline: "Simplify RAG App Testing",
   favicon: "img/favicon.ico",
-
-  // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/",
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "lsidore", // Usually your GitHub org/user name.
-  projectName: "AcmeEval", // Usually your repo name.
-
+  url: "https://lsidore.github.io/",
+  baseUrl: "/AcmeEval/",
+  organizationName: "lsidore",
+  projectName: "AcmeEval",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
   },
-
   plugins: [tailwindPlugin],
-
   presets: [
     [
       "classic",
@@ -44,8 +30,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: "img/docusaurus-social-card.jpg",
     navbar: {
       title: "AcmeEval",
       logo: {
@@ -62,26 +46,7 @@ const config: Config = {
     },
     footer: {
       style: "dark",
-      links: [
-        {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/docusaurus",
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `© ${new Date().getFullYear()} AcmeEval.`,
     },
     prism: {
       theme: prismThemes.github,
