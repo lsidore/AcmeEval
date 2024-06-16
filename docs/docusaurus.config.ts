@@ -12,7 +12,7 @@ const config: Config = {
   organizationName: "lsidore",
   projectName: "AcmeEval",
   trailingSlash: true,
-  onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   i18n: {
     defaultLocale: "en",

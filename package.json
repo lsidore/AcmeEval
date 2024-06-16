@@ -9,7 +9,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,9 @@
   "bugs": {
     "url": "https://github.com/lsidore/AcmeEval/issues"
   },
-  "homepage": "https://github.com/lsidore/AcmeEval#readme"
+  "homepage": "https://github.com/lsidore/AcmeEval#readme",
+  "devDependencies": {
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5"
+  }
 }
