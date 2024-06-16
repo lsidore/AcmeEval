@@ -23,6 +23,10 @@ const config: Config = {
     [
       "classic",
       {
+        docs: {
+          sidebarPath: "./sidebars.ts",
+          editUrl: "https://github.com/lsidore/AcmeEval/tree/main/docs",
+        },
         theme: {
           customCss: "./src/css/custom.css",
         },

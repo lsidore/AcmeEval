@@ -17,7 +17,7 @@ const HomepageHeader = () => (
         </p>
         <div className="flex justify-center">
           <Link
-            href="#"
+            href="/docs/intro"
             className="inline-flex h-10 items-center justify-center rounded-md bg-white text-[#535C91] px-8 text-sm font-medium shadow transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
           >
             Get Started
@@ -32,7 +32,7 @@ export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title} - Easy RAG Testing`}
       description="Description will go into a meta tag in <head />"
     >
       <HomepageHeader />

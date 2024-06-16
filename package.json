@@ -2,7 +2,9 @@
   "name": "@acme/eval",
   "version": "0.0.1",
   "description": "Opinionated framework that offers a simple and swift solution for RAG evaluation",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "directories": {
     "doc": "docs"
   },
