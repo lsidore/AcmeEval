@@ -1,6 +1,6 @@
-# AcmeEval: Opinionated RAG Evaluation Framework
+# AcmeEval: RAG Evaluation Framework
 
-AcmeEval is a TypeScript library designed to simplify and swiftly handle RAG (Retrieval-Augmented Generation) evaluation. This framework offers a streamlined solution for testing and measuring the performance of your RAG systems.
+AcmeEval is a TypeScript library that simplifies and expedites the evaluation of Retrieval-Augmented Generation (RAG) systems. This framework provides an efficient solution for assessing the performance of your RAG systems, both locally and via APIs.
 
 ## Installation
 
