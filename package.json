@@ -1,6 +1,6 @@
 {
 	"name": "@acme-eval/core",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Opinionated framework that offers a simple and swift solution for RAG evaluation",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
