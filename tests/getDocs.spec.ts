@@ -42,7 +42,7 @@ describe('getRandomChunk', () => {
 			content: 'test content\n\nmore test content',
 		};
 		const result = getRandomChunk(doc);
-		expect(doc.content.includes(result)).toBe(true);
+		expect(doc.content.includes(result.content)).toBe(true);
 	});
 });
 
@@ -56,6 +56,6 @@ describe('getRandomPart', () => {
 
 		const result = await getRandomPart('/test');
 
-		expect(fileContent.includes(result)).toBe(true);
+		expect(fileContent.includes(result.content)).toBe(true);
 	});
 });

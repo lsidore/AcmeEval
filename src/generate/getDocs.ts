@@ -61,9 +61,12 @@ export const getRandom = <T>(array: T[]): T => {
 export const getRandomChunk = (
 	doc: Doc,
 	options?: GetRandomChunkOptions,
-): string => {
+): {
+	content: string;
+	file: string;
+} => {
 	const chunkSize = options?.chunkSize ?? 2000;
-	if (doc.content.length < chunkSize) return doc.content;
+	if (doc.content.length < chunkSize) return doc;
 
 	const rawChunks = doc.content.split('\n\n');
 	const chunks = rawChunks.filter((chunk) => !!chunk && chunk.length > 1);
@@ -78,10 +81,12 @@ export const getRandomChunk = (
 		randomIndex++;
 		i++;
 	}
-	return chunk.slice(0, chunkSize);
+	return { content: chunk.slice(0, chunkSize), file: doc.file };
 };
 
-export const getRandomPart = async (dir: string): Promise<string> => {
+export const getRandomPart = async (
+	dir: string,
+): Promise<{ content: string; file: string }> => {
 	const docs = await getDocs(dir);
 	const randomDoc = getRandom(docs);
 	return getRandomChunk(randomDoc);

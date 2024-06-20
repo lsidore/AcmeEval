@@ -18,3 +18,17 @@ export type ScoredQuestion = {
 export type ValidatedQuestions = {
 	questions: ScoredQuestion[];
 };
+
+export type GeneratedGroundTruth = {
+	groundTruth: string;
+};
+
+export type GeneratedQnA = {
+	context: string;
+	question: string;
+	questionPertinance: number;
+	groundTruth: string;
+	path: string;
+};
+
+export type GeneratedTestSet = GeneratedQnA[];
