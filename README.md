@@ -12,6 +12,26 @@ npm install @acme-eval/core
 yarn add @acme-eval/core
 ```
 
+## Using the `generateTestSet` Function
+
+The `generateTestSet` function is used to generate a test set of questions from a folder containing markdown files. It takes the following parameters:
+
+- `pathToDoc`: Path to the folder containing the markdown files. This is a required field.
+- `nbOfQuestions`: Number of questions to generate. Defaults to 10 if not provided.
+- `withLogs`: Display logs during the generation process. Defaults to `false`.
+- `saveOnDisk`: Save the generated questions to a JSON file. Defaults to `true`.
+- `finalPath`: Path to save the generated questions. Defaults to `'./generatedQuestions.json'`.
+
+The function returns the generated questions.
+
+Here's an example of how to use the function:
+
+```javascript
+const questions = await generateTestSet('./docs', 20, true, true, './testQuestions.json');
+console.log(questions);
+```
+
+In this example, the function will generate 20 questions from the markdown files in the `./docs` folder, display logs during the process, save the generated questions to `./testQuestions.json`, and then log the generated questions to the console.
 ## Documentation
 
 For more information about AcmeEval, please visit our [documentation](https://lsidore.github.io/AcmeEval/docs/intro).
