@@ -12,6 +12,14 @@ npm install @acme-eval/core
 yarn add @acme-eval/core
 ```
 
+## Quick Start Guide
+
+Get started with AcmeEval in just a few steps:
+
+1. Prepare your documentation: Ensure your documentation is in a folder containing markdown files.
+2. Generate test questions: Use the `generateTestSet` function to generate a set of questions based on your documentation.
+3. Evaluate your RAG system: Use the generated questions to evaluate the performance of your RAG system.
+
 ## Using the `generateTestSet` Function
 
 The `generateTestSet` function is used to generate a test set of questions from a folder containing markdown files. It takes the following parameters:
@@ -32,9 +40,19 @@ console.log(questions);
 ```
 
 In this example, the function will generate 20 questions from the markdown files in the `./docs` folder, display logs during the process, save the generated questions to `./testQuestions.json`, and then log the generated questions to the console.
+
 ## Documentation
 
 For more information about AcmeEval, please visit our [documentation](https://lsidore.github.io/AcmeEval/docs/intro).
+
+## Troubleshooting
+
+If you encounter any problems or errors, please check the following:
+
+Ensure that the path to your documentation folder is correct.
+Make sure that the markdown files in your documentation folder are well-formatted.
+Check that you have the necessary permissions to read and write files in the specified paths.
+If you've checked these and are still experiencing issues, please open an issue with as much detail as possible.
 
 ## License
 
