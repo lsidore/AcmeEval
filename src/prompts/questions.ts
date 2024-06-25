@@ -1,4 +1,4 @@
-import { GeneratedQuestions } from '../generate';
+import { GeneratedQuestions, ScoredQuestion } from '../generate';
 import { stringify } from '../utils';
 import { Prompt, PromptExemple } from './types';
 import { exemplesToString } from './utils';
@@ -90,7 +90,10 @@ export const validateQuestionsPrompt: Prompt & {
 };
 
 export const generateGroundTruthPrompt: Prompt & {
-	formatPrompt: (questions: GeneratedQuestions, context: string) => string;
+	formatPrompt: (
+		questions: ScoredQuestion['question'][],
+		context: string,
+	) => string;
 } = {
 	prompt: `En te basant sur le contexte et les questions, extrait une réponse exhaustive pour chaque question.`,
 	exemples: [
@@ -113,13 +116,13 @@ export const generateGroundTruthPrompt: Prompt & {
 			},
 		},
 	],
-	formatPrompt: (questions: GeneratedQuestions, context: string) =>
+	formatPrompt: (questions, context) =>
 		formatFullPrompt(
 			generateGroundTruthPrompt.prompt,
 			generateGroundTruthPrompt.exemples,
 			`input: ${stringify({
 				context,
-				questions: questions.questions,
+				questions: questions,
 			})}`,
 		),
 };
