@@ -1,3 +1,5 @@
+import { LogLevel } from './types';
+
 /**
  * Stringify a json object with 2 spaces indentation
  * @param json  - The json to stringify
@@ -18,6 +20,41 @@ export const checkForMissingFields = (
 	}
 };
 
+export const calculateElapsedTime = (start: number) => {
+	const now = Date.now();
+	if (start > now) {
+		throw new Error('Start time is in the future');
+	}
+
+	const seconds = Math.floor((now - start) / 1000);
+	const minutes = Math.floor(seconds / 60);
+	const secondsRest = seconds % 60;
+	const milliseconds = (now - start) % 1000;
+
+	return `${minutes}m ${secondsRest}s ${milliseconds}ms`;
+};
+
+export class Logger {
+	logLevel: LogLevel;
+	constructor(logLevel: LogLevel) {
+		this.logLevel = logLevel;
+	}
+
+	get enable() {
+		return this.logLevel === 'debug';
+	}
+
+	debug(title: string, ...args: any[]) {
+		this.enable &&
+			console.debug(`\n\n`, `\x1b[36m`, title, `\x1b[0m:`, ...args);
+	}
+
+	info(title: string, ...args: any[]) {
+		this.enable &&
+			console.info(`\n\n`, `\x1b[33m`, title, `\x1b[0m:`, ...args);
+	}
+}
+
 export /**
  * @param {number} step - The step to increment
  * @param {number} total - The total number of steps
@@ -33,21 +70,21 @@ class ProgressBar {
 	text: string;
 	startTime: number;
 	lastStepTime: number;
-	clearConsole: boolean;
+	logLevel: LogLevel;
 	loader: NodeJS.Timeout | undefined;
 
 	constructor(
 		step: number,
 		total: number,
 		text: string,
-		clearConsole = true,
+		logLevel: LogLevel = 'info',
 	) {
 		this.step = step;
 		this.total = total;
 		this.text = text;
 		this.startTime = Date.now();
 		this.lastStepTime = this.startTime;
-		this.clearConsole = clearConsole;
+		this.logLevel = logLevel;
 	}
 
 	loadingAnimation(
@@ -84,13 +121,14 @@ class ProgressBar {
 		const totalTime = ((now - this.startTime) / 1000).toFixed(2);
 
 		this.current += step;
-		this.clearConsole && process.stdout.write('\x1Bc');
+
+		if (this.logLevel === 'info') process.stdout.write('\x1Bc');
+
 		process.stdout.write(
 			`- Total: ${totalTime}s\n- ${timeSinceLastStep.toFixed(2)}s / ${this.text}s\n- ETA: ${eta}s\n- ${this.text}s: ${this.current}/${this.total}`,
 		);
 		process.stdout.cursorTo(18);
-
-		if (this.current === this.total) {
+		if (this.current > this.total) {
 			process.stdout.write('\n');
 			clearInterval(this.loader);
 		}
