@@ -15,6 +15,20 @@ import {
 } from './generateQuestion';
 import { LogLevel } from '../types';
 
+type GeneratedTestSetProps = [
+	pathToDoc: string,
+	nbOfQuestions?: number,
+	params?: {
+		logLevel?: LogLevel;
+		saveOnDisk?: boolean;
+		finalPath?: string;
+		minQuestionScore?: number;
+	},
+];
+type GenerateTestSetFunc = (
+	...args: GeneratedTestSetProps
+) => Promise<GeneratedTestSet>;
+
 const DEFAULT_QUESTIONS_COUNT = 5;
 const DEFAULT_LOG_LEVEL: LogLevel = 'info';
 const DEFAULT_SAVE_ON_DISK = true;
@@ -33,15 +47,19 @@ const MIN_SCORE = 0.8;
  * @default true
  * @param {string} finalPath - Path to save the generated questions.
  * @default './generatedQuestions.json'
- * @returns {Promise<GeneratedTestSet>} The generated questions.
  */
-export const generateTestSet = async (
+export const generateTestSet: GenerateTestSetFunc = async (
 	pathToDoc: string,
-	nbOfQuestions = DEFAULT_QUESTIONS_COUNT,
-	logLevel = DEFAULT_LOG_LEVEL,
-	saveOnDisk = DEFAULT_SAVE_ON_DISK,
-	finalPath = DEFAULT_FINAL_PATH,
+	nbOfQuestions: number = DEFAULT_QUESTIONS_COUNT,
+	params = {},
 ) => {
+	const {
+		logLevel = DEFAULT_LOG_LEVEL,
+		saveOnDisk = DEFAULT_SAVE_ON_DISK,
+		finalPath = DEFAULT_FINAL_PATH,
+		minQuestionScore = MIN_SCORE,
+	} = params;
+
 	checkForMissingFields({ pathToDoc }, 'generateTestSet');
 	const startTime = performance.now();
 
@@ -52,6 +70,7 @@ export const generateTestSet = async (
 	const questions = await generateQuestionsForTestSet(
 		pathToDoc,
 		nbOfQuestions,
+		minQuestionScore,
 		logHandler,
 		progressBar,
 	);
@@ -79,6 +98,7 @@ export const generateTestSet = async (
 const generateQuestionsForTestSet = async (
 	pathToDoc: string,
 	nbOfQuestions: number,
+	minQuestionScore: number,
 	logHandler: Logger,
 	progressBar: ProgressBar,
 ) => {
@@ -98,7 +118,7 @@ const generateQuestionsForTestSet = async (
 		logHandler.debug('Scored Questions:', scoredQuestions);
 
 		const acceptedQuestions = scoredQuestions.filter(
-			(question) => question.score >= MIN_SCORE,
+			(question) => question.score >= minQuestionScore,
 		);
 
 		const groundTruth = await generateGroundTruth(
