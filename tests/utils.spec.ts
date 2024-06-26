@@ -115,14 +115,14 @@ describe('Utils', () => {
 
 	describe('calculateElapsedTime', () => {
 		it('should throw an error if start time is in the future', () => {
-			const start = Date.now() + 1000;
+			const start = performance.now() + 1000;
 			expect(() => calculateElapsedTime(start)).toThrow(
 				'Start time is in the future',
 			);
 		});
 
 		it('should calculate elapsed time correctly', () => {
-			const start = Date.now() - 61000;
+			const start = performance.now() - 61000;
 			const result = calculateElapsedTime(start);
 			expect(result).toBe('1m 1s 0ms');
 		});
@@ -159,14 +159,14 @@ describe('Utils', () => {
 			);
 		});
 
-		it('should not log messages if log level is not debug', () => {
+		it('should not log debug messages if log level is not debug', () => {
 			logger = new Logger('info');
 			const spyDebug = jest.spyOn(console, 'debug');
 			const spyInfo = jest.spyOn(console, 'info');
 			logger.debug('Test', 'Message');
 			logger.info('Test', 'Message');
 			expect(spyDebug).not.toHaveBeenCalled();
-			expect(spyInfo).not.toHaveBeenCalled();
+			expect(spyInfo).toHaveBeenCalled();
 		});
 	});
 });
