@@ -21,13 +21,13 @@ export const checkForMissingFields = (
 };
 
 export const calculateElapsedTime = (start: number) => {
-	const now = Date.now();
+	const now = performance.now();
 	if (start > now) {
 		throw new Error('Start time is in the future');
 	}
 
 	const seconds = Math.floor((now - start) / 1000);
-	const minutes = Math.floor(seconds / 60);
+	const minutes = seconds > 60 ? Math.floor(seconds / 60) : 0;
 	const secondsRest = seconds % 60;
 	const milliseconds = (now - start) % 1000;
 
@@ -50,8 +50,7 @@ export class Logger {
 	}
 
 	info(title: string, ...args: any[]) {
-		this.enable &&
-			console.info(`\n\n`, `\x1b[33m`, title, `\x1b[0m:`, ...args);
+		console.info(`\n\n`, `\x1b[33m`, title, `\x1b[0m:`, ...args);
 	}
 }
 
@@ -82,7 +81,7 @@ class ProgressBar {
 		this.step = step;
 		this.total = total;
 		this.text = text;
-		this.startTime = Date.now();
+		this.startTime = performance.now();
 		this.lastStepTime = this.startTime;
 		this.logLevel = logLevel;
 	}
@@ -107,12 +106,11 @@ class ProgressBar {
 	}
 
 	update(step = this.step) {
-		const now = Date.now();
+		const now = performance.now();
 		const timeSinceLastStep = (now - this.lastStepTime) / 1000; // in seconds
 		this.lastStepTime = now;
-
 		const eta =
-			this.current === 0
+			step === 0
 				? '~~'
 				: (
 						(this.total - this.current) *
@@ -128,7 +126,7 @@ class ProgressBar {
 			`- Total: ${totalTime}s\n- ${timeSinceLastStep.toFixed(2)}s / ${this.text}s\n- ETA: ${eta}s\n- ${this.text}s: ${this.current}/${this.total}`,
 		);
 		process.stdout.cursorTo(18);
-		if (this.current > this.total) {
+		if (this.current >= this.total) {
 			process.stdout.write('\n');
 			clearInterval(this.loader);
 		}
