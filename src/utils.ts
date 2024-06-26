@@ -29,7 +29,7 @@ export const calculateElapsedTime = (start: number) => {
 	const seconds = Math.floor((now - start) / 1000);
 	const minutes = seconds > 60 ? Math.floor(seconds / 60) : 0;
 	const secondsRest = seconds % 60;
-	const milliseconds = Math.floor((now - start) % 1000;)
+	const milliseconds = Math.floor((now - start) % 1000);
 
 	return `${minutes}m ${secondsRest}s ${milliseconds}ms`;
 };
