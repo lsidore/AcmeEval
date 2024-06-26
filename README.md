@@ -1,4 +1,5 @@
 # AcmeEval: TypeScript RAG Evaluation Framework
+[![CI Tests](https://github.com/lsidore/AcmeEval/actions/workflows/ci-tests.js.yml/badge.svg)](https://github.com/lsidore/AcmeEval/actions/workflows/ci-tests.js.yml)
 
 AcmeEval is a TypeScript library that simplifies and expedites the evaluation of Retrieval-Augmented Generation (RAG) systems. This framework provides an efficient solution for assessing the performance of your RAG systems, both locally and via APIs.
 
