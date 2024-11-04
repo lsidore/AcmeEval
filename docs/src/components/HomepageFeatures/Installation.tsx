@@ -29,7 +29,7 @@ export const Installation = () => {
 						<p className="text-xs text-gray-500 dark:text-gray-400">
 							Get started by installing the core package.{' '}
 							<Link
-								href="#"
+								href="https://github.com/lsidore/AcmeEval"
 								className="underline underline-offset-2">
 								Read the documentation
 							</Link>{' '}
