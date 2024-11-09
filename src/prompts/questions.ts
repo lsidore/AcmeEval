@@ -1,6 +1,6 @@
 import { GeneratedQuestions, ScoredQuestion } from '../generate';
 import { stringify } from '../utils';
-import { Prompt, PromptExemple } from './types';
+import { Prompt, PromptExemple, PromptOpenAi } from './types';
 import { exemplesToString } from './utils';
 
 export const formatFullPrompt = (
@@ -10,9 +10,27 @@ export const formatFullPrompt = (
 ) =>
 	`${prompt}\n\n${exemplesToString(exemplesString)}\n\n${contentInput}\noutput:`;
 
-export const generateQuestionsPrompt: Prompt & {
-	formatPrompt: (contex: string) => string;
-} = {
+export const formatOpenAiPrompt = (
+	prompt: string,
+	exemples: { input: any; output: any }[],
+	contentInput: string,
+) => {
+	console.info('Input', exemples);
+	const messages = exemples.flatMap(({ input, output }) => [
+		{ role: 'user', content: JSON.stringify(input, null, 2) },
+		{
+			role: 'assistant',
+			content: [{ type: 'text', text: JSON.stringify(output, null, 2) }],
+		},
+	]);
+	return [
+		{ role: 'system', content: prompt },
+		...messages,
+		{ role: 'user', content: contentInput },
+	];
+	// `${prompt}\n\n${exemplesToString(exemplesString)}\n\n${contentInput}\noutput:`;
+};
+export const generateQuestionsPrompt = {
 	prompt: 'Génére 3 questions auxquelles il est possible de répondre de manière exhaustive à partir du contexte donné',
 	exemples: [
 		{
@@ -36,17 +54,15 @@ export const generateQuestionsPrompt: Prompt & {
 			},
 		},
 	],
-	formatPrompt: (context) =>
-		formatFullPrompt(
+	formatPrompt: (context: string) =>
+		formatOpenAiPrompt(
 			generateQuestionsPrompt.prompt,
 			generateQuestionsPrompt.exemples,
-			`input: Le contexte est le suivant : ${context}`,
+			context,
 		),
 };
 
-export const validateQuestionsPrompt: Prompt & {
-	formatPrompt: (questions: GeneratedQuestions, context: string) => string;
-} = {
+export const validateQuestionsPrompt = {
 	prompt: `Une question est pertinente si elle peut être répondue de manière exhaustive à partir du contexte. Donne un score à chaque question en fonction de sa pertinence. Le score doit être un nombre entre 0 et 1.`,
 	exemples: [
 		{
@@ -78,23 +94,19 @@ export const validateQuestionsPrompt: Prompt & {
 			},
 		},
 	],
-	formatPrompt: (questions, context) =>
-		formatFullPrompt(
+
+	formatPrompt: (questions: string[], context: string) =>
+		formatOpenAiPrompt(
 			validateQuestionsPrompt.prompt,
 			validateQuestionsPrompt.exemples,
-			`input: ${stringify({
+			stringify({
 				context,
 				questions,
-			})}`,
+			}),
 		),
 };
 
-export const generateGroundTruthPrompt: Prompt & {
-	formatPrompt: (
-		questions: ScoredQuestion['question'][],
-		context: string,
-	) => string;
-} = {
+export const generateGroundTruthPrompt = {
 	prompt: `En te basant sur le contexte et les questions, extrait une réponse exhaustive pour chaque question.`,
 	exemples: [
 		{
@@ -116,13 +128,13 @@ export const generateGroundTruthPrompt: Prompt & {
 			},
 		},
 	],
-	formatPrompt: (questions, context) =>
-		formatFullPrompt(
+	formatPrompt: (questions: string[], context: string) =>
+		formatOpenAiPrompt(
 			generateGroundTruthPrompt.prompt,
 			generateGroundTruthPrompt.exemples,
-			`input: ${stringify({
+			stringify({
 				context,
 				questions: questions,
-			})}`,
+			}),
 		),
 };

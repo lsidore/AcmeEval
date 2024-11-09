@@ -6,3 +6,12 @@ export type PromptExemple = {
 	input: string | object;
 	output: string | object;
 };
+export type PromptOpenAi = {
+	role: string;
+	content: {
+		input: string;
+		output: {
+			questions: string[];
+		};
+	};
+}[];

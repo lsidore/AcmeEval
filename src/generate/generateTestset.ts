@@ -1,38 +1,13 @@
-import { writeFile } from 'fs/promises';
-import {
-	Logger,
-	ProgressBar,
-	calculateElapsedTime,
-	checkForMissingFields,
-	stringify,
-} from '../utils';
+import { calculateElapsedTime, checkForMissingFields } from '../utils';
 import { GeneratedTestSet } from './types';
-import { getRandomPart } from './getDocs';
+
 import {
 	generateGroundTruth,
 	generateQuestions,
 	validateQuestions,
 } from './generateQuestion';
-import { LogLevel } from '../types';
-
-type GeneratedTestSetProps = [
-	pathToDoc: string,
-	nbOfQuestions?: number,
-	params?: {
-		logLevel?: LogLevel;
-		saveOnDisk?: boolean;
-		finalPath?: string;
-		minQuestionScore?: number;
-	},
-];
-type GenerateTestSetFunc = (
-	...args: GeneratedTestSetProps
-) => Promise<GeneratedTestSet>;
 
 const DEFAULT_QUESTIONS_COUNT = 5;
-const DEFAULT_LOG_LEVEL: LogLevel = 'info';
-const DEFAULT_SAVE_ON_DISK = true;
-const DEFAULT_FINAL_PATH = './generatedQuestions.json';
 const MIN_SCORE = 0.8;
 
 /**
@@ -40,7 +15,7 @@ const MIN_SCORE = 0.8;
  *
  * @param {string} pathToDoc - Path to the folder containing the markdown files.
  * @param {number} nbOfQuestions - Number of questions to generate.
- * @default 10
+ * @default 5
  * @param {LogLevel} logLevel - Display logs level.
  * @default 'info'
  * @param {boolean} saveOnDisk - Whether to save the generated questions on disk.
@@ -48,41 +23,26 @@ const MIN_SCORE = 0.8;
  * @param {string} finalPath - Path to save the generated questions.
  * @default './generatedQuestions.json'
  */
-export const generateTestSet: GenerateTestSetFunc = async (
+export const generateTestSet = async (
 	pathToDoc: string,
 	nbOfQuestions: number = DEFAULT_QUESTIONS_COUNT,
-	params = {},
+	params: {
+		minQuestionScore: number;
+	} = { minQuestionScore: MIN_SCORE },
 ) => {
-	const {
-		logLevel = DEFAULT_LOG_LEVEL,
-		saveOnDisk = DEFAULT_SAVE_ON_DISK,
-		finalPath = DEFAULT_FINAL_PATH,
-		minQuestionScore = MIN_SCORE,
-	} = params;
+	const { minQuestionScore } = params;
 
 	checkForMissingFields({ pathToDoc }, 'generateTestSet');
 	const startTime = performance.now();
-
-	const logHandler = new Logger(logLevel);
-	const progressBar = new ProgressBar(1, nbOfQuestions, 'Question', logLevel);
-	progressBar.start();
 
 	const questions = await generateQuestionsForTestSet(
 		pathToDoc,
 		nbOfQuestions,
 		minQuestionScore,
-		logHandler,
-		progressBar,
 	);
 
 	const elapsedTime = calculateElapsedTime(startTime);
-	logHandler.info(
-		`Generated ${questions.length} questions in ${elapsedTime}`,
-	);
-
-	if (saveOnDisk) {
-		await writeFile(finalPath, stringify(questions));
-	}
+	console.info(`Generated ${questions.length} questions in ${elapsedTime}`);
 
 	return questions;
 };
@@ -90,56 +50,65 @@ export const generateTestSet: GenerateTestSetFunc = async (
 /**
  * Generates a test set of questions based on a given document.
  *
- * @param {string} pathToDoc - The path to the document from which to generate questions.
+ * @param {string} context - The context from which to generate questions.
  * @param {number} nbOfQuestions - The number of questions to generate for the test set.
- * @param {Logger} logHandler - The logger object to handle debug logs.
- * @param {ProgressBar} progressBar - The progress bar object to update the progress.
  */
-const generateQuestionsForTestSet = async (
-	pathToDoc: string,
+export const generateQuestionsForTestSet = async (
+	context: string,
 	nbOfQuestions: number,
-	minQuestionScore: number,
-	logHandler: Logger,
-	progressBar: ProgressBar,
 ) => {
 	const questions: GeneratedTestSet = [];
-
-	for (let i = 0; i < nbOfQuestions; i++) {
-		const { content: context, file } = await getRandomPart(pathToDoc);
+	let step = 1;
+	while (questions?.length < nbOfQuestions) {
+		console.info(
+			`\nSTEP: ${step}, Nb of Questions Generated: ${questions?.length}`,
+		);
+		// const { content: context, file } = await getRandomPart(pathToDoc);
 		const generatedQuestions = await generateQuestions(context);
 
-		logHandler.debug('Generated Questions:', generatedQuestions);
-
 		const scoredQuestions = await validateQuestions(
-			{ questions: generatedQuestions },
+			generatedQuestions,
 			context,
 		);
-
-		logHandler.debug('Scored Questions:', scoredQuestions);
-
-		const acceptedQuestions = scoredQuestions.filter(
-			(question) => question.score >= minQuestionScore,
+		const acceptedQuestions = scoredQuestions?.result?.filter(
+			({
+				quality_and_clarity,
+				relevance,
+			}: {
+				quality_and_clarity: { is_clear: boolean };
+				relevance: { is_answerable: boolean };
+			}) => {
+				return (
+					quality_and_clarity?.is_clear && relevance?.is_answerable
+				);
+			},
 		);
-
-		const groundTruth = await generateGroundTruth(
-			acceptedQuestions.map((q) => q.question),
+		console.info(
+			'\nACCEPTED Questions',
+			JSON.stringify(acceptedQuestions, null, 2),
+		);
+		const acceptedQuestionsResult = acceptedQuestions?.map(
+			({ question }: { question: string }) => question,
+		);
+		const groundTruthResult = await generateGroundTruth(
+			acceptedQuestionsResult,
 			context,
 		);
+		const groundTruth = groundTruthResult?.groundTruth;
 
-		logHandler.debug('Ground Truth:', groundTruth);
+		console.debug('\nGround Truth:', groundTruth);
 
-		if (Array.isArray(groundTruth) && Array.isArray(scoredQuestions)) {
-			for (let i = 0; i < scoredQuestions.length; i++) {
+		for (let i = 0; i < acceptedQuestions.length; i++) {
+			if (questions?.length < nbOfQuestions)
 				questions.push({
 					context,
-					question: scoredQuestions[i].question,
-					questionPertinance: scoredQuestions[i].score,
+					question: acceptedQuestions[i].question,
+					questionPertinance: acceptedQuestions[i].score,
 					groundTruth: groundTruth[i],
-					path: file,
+					path: 'any',
 				});
-			}
 		}
-		progressBar.update();
+		step++;
 	}
 
 	return questions;
