@@ -182,8 +182,14 @@ export const getGeneratedQuestions = (context: string) =>
 		schema: z.string().describe('A question derived from the context.'),
 	});
 
-export const getCorrectedQuestions = (query: string) =>
-	generateObject({
+export const getCorrectedQuestions = (
+	query: string,
+	schoolGrade = 'College',
+) => {
+	const promptTemplate =
+		'You are a [schoolGrade] teacher. Your role is to evaluate the correctness of the student\'s answer to an exam.\n\nEvaluate the student answer against the expected answer and provide concise, actionable feedback focused on improving the student\'s reply.\n\nThe input is a JSON object with the following properties:\n- `document`: A relevant document containing the expected answer.\n- `question`: The specific question asked.\n- `answer`: The student\'s response to the question.\n- `groundTruth`: The expected answer.\n\n# Steps\n\n1. **Evaluate the Answer**:\n   - Compare the student\'s answer (`answer`) to the expected answer (`groundTruth`) based on the information provided in the `document`.\n   - If the student\'s answer has the same meaning as the ground truth, even if the wording differs, mark the answer as correct.\n   - Determine if the answer completely and accurately addresses the question.\n\n2. **Generate Feedback**:\n   - If the student\'s answer is correct, provide an empty feedback: `""`.\n   - If the student\'s answer is incorrect:\n     - Provide concise feedback focusing only on steps to improve the response.\n     - Use the `document` and `groundTruth` to pinpoint missing elements or inaccuracies, focusing solely on bridging the gaps needed to reach the correct or expected answer.\n\n# Output Format\n\nThe output should be a JSON object structured as follows:\n\n```json\n{\n  "feedback": "Your concise, specific feedback here",\n  "isCorrect": 1 or 0\n}\n```\n\n- `"isCorrect"` should be `1` if the student\'s answer is correct, and `0` if it is incorrect.\n- If the answer is correct, `"feedback"` should be an empty string.\n- If the answer is incorrect, `"feedback"` should provide clear and actionable steps to improve the student\'s response in a concise manner.\n\n# Notes\n\n- Only utilize the given `document` and `groundTruth` to evaluate the answer and generate the feedback.\n- Feedback must be concise and directly focused on specific improvements needed to meet the expected answer, considering their [schoolGrade] level and the equivalence in meaning, even if not matched word-for-word.';
+
+	return generateObject({
 		model: openai('gpt-4o-mini', {
 			structuredOutputs: true,
 		}),
@@ -197,45 +203,9 @@ export const getCorrectedQuestions = (query: string) =>
 		},
 		temperature: 0.1,
 		maxTokens: 2048,
-		system: "Evaluate the student's answer based on the provided context and assign a score along with a feedback that encourages correct answers and provides constructive guidance on how to improve for incorrect answers.\n\n# Steps\n\n1. **Evaluate the Answer**:\n   - Compare the student's answer to the information provided in the context.\n   - Determine if the answer completely and accurately addresses the question based on the context.\n  \n2. **Assign a Score**:\n   - Assign a score of `0` for an incorrect or incomplete answer.\n   - Assign a score of `1` for a correct and complete answer.\n\n3. **Generate Feedback**:\n   - If the answer is incorrect or incomplete, provide constructive feedback. Explain why the answer is incorrect and suggest how it can be improved.\n   - If the answer is correct, include an encouraging statement recognizing the student's accurate response.\n\n# Notes\n\n- Only use the provided context in determining the accuracy and providing corrections.\n- Feedback for an incorrect answer should be constructive, with a clear and direct explanation on how to improve.\n- Positive and straightforward encouragement is expected when the student's answer is correct.",
+		system: promptTemplate.replaceAll('[schoolGrade]', schoolGrade),
 		output: 'object',
 		messages: [
-			{
-				role: 'user',
-				content: [
-					{
-						text: '{\n  "context": "The Earth revolves around the Sun over the course of about 365 days, which results in the changing seasons.",\n  "question": "What causes the changing seasons on Earth?",\n  "answer": "The changing seasons are caused because the Earth rotates."\n}',
-						type: 'text',
-					},
-				],
-			},
-			{
-				role: 'assistant',
-				content: [
-					{
-						text: '{\n  "score": 0,\n  "feedback": "The changing seasons are actually caused by the Earth\'s revolution around the Sun combined with the axial tilt of the Earth. Keep in mind that the Earth\'s rotation causes day and night, not the seasons. You can improve by focusing on these details."\n}',
-						type: 'text',
-					},
-				],
-			},
-			{
-				role: 'user',
-				content: [
-					{
-						text: '{\n  "context": "The Earth revolves around the Sun over the course of about 365 days, which results in the changing seasons.",\n  "question": "What causes the changing seasons on Earth?",\n  "answer": "The Earth revolves around the Sun, which causes the changing seasons."\n}',
-						type: 'text',
-					},
-				],
-			},
-			{
-				role: 'assistant',
-				content: [
-					{
-						text: '{\n "score": 1,\n  "feedback": "Great job! You correctly explained what causes the changing seasons! Keep it up!"\n}',
-						type: 'text',
-					},
-				],
-			},
 			{
 				role: 'user',
 				content: query,
@@ -243,10 +213,10 @@ export const getCorrectedQuestions = (query: string) =>
 		],
 		schema: z
 			.object({
-				score: z
+				isCorrect: z
 					.number()
 					.describe(
-						'The score awarded to the student based on their answer.',
+						"Indicates whether the student's answer is correct or incorrect",
 					),
 				feedback: z
 					.string()
@@ -256,3 +226,4 @@ export const getCorrectedQuestions = (query: string) =>
 			})
 			.describe('Feedback schema for student answers'),
 	});
+};
