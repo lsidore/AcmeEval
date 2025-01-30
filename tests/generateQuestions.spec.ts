@@ -18,7 +18,7 @@ describe('generateQuestion', () => {
 				const result = await generateQuestionsForTestSet([
 					"C'est l'une des techniques les plus connues, qui consiste à inciter les grands modèles de langage à aborder un problème « pas à pas », avant de fournir la réponse finale16. La chaîne de pensée améliore les capacités de raisonnement d'un modèle, en le poussant à résoudre un problème de façon plus progressive. Il permet aux grands modèles de langage de surmonter les difficultés liées à certaines tâches de raisonnement qui nécessitent une réflexion logique et plusieurs étapes à résoudre, comme les problèmes arithmétiques",
 				]);
-				console.info('RESULR', JSON.stringify(result, null, 2));
+				console.log('RESULR', JSON.stringify(result, null, 2));
 			},
 			60 * 60 * 60 * 60,
 		);

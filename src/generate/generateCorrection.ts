@@ -10,7 +10,7 @@ export const generateCorrection = async (qna: QnA) => {
 		warnings,
 	} = await getCorrectedQuestions(JSON.stringify({ qna }));
 
-	console.info(
+	console.log(
 		'\ncorrection',
 		JSON.stringify({ correction, usage, warnings }, null, 2),
 	);
@@ -19,6 +19,6 @@ export const generateCorrection = async (qna: QnA) => {
 
 export const getCorrection = async (qnas: QnA[]) => {
 	const result = await Promise.all(qnas.map(generateCorrection));
-	console.info(`\n\n Correction generated ${result?.length}`);
+	console.log(`\n\n Correction generated ${result?.length}`);
 	return result;
 };

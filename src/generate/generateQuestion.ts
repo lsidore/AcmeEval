@@ -1,5 +1,4 @@
 //@ts-ignore
-import dirtyJson from 'dirty-json';
 import { GeneratedQuestions, ScoredQuestion } from './types';
 import { checkForMissingFields } from '../utils';
 import {
@@ -20,7 +19,7 @@ export const generateQuestions = async (
 		warnings,
 	} = await getGeneratedQuestions(context);
 
-	console.info(
+	console.log(
 		'Generated questions',
 		JSON.stringify({ generatedQuestions, usage, warnings }, null, 2),
 	);
@@ -40,7 +39,7 @@ export const validateQuestions = async (
 		warnings,
 	} = await getEvaluatedQuestions(JSON.stringify({ context, questions }));
 
-	console.info(
+	console.log(
 		'releventQuestions',
 		JSON.stringify({ releventQuestions, usage, warnings }, null, 2),
 	);
@@ -60,7 +59,7 @@ export const generateGroundTruth = async (
 		warnings,
 	} = await getGroundTruths(JSON.stringify({ context, questions }));
 
-	console.info(
+	console.log(
 		'groundTruths',
 		JSON.stringify({ groundTruths, usage, warnings }, null, 2),
 	);

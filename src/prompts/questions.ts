@@ -15,7 +15,7 @@ export const formatOpenAiPrompt = (
 	exemples: { input: any; output: any }[],
 	contentInput: string,
 ) => {
-	console.info('Input', exemples);
+	console.log('Input', exemples);
 	const messages = exemples.flatMap(({ input, output }) => [
 		{ role: 'user', content: JSON.stringify(input, null, 2) },
 		{

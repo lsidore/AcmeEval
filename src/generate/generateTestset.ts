@@ -31,43 +31,40 @@ export const generateTestSet = async (pathToDoc: string) => {
 	const questions = await generateQuestionsForTestSet([pathToDoc]);
 
 	const elapsedTime = calculateElapsedTime(startTime);
-	console.info(`Generated ${questions.length} questions in ${elapsedTime}`);
+	console.log(`Generated ${questions.length} questions in ${elapsedTime}`);
 
 	return questions;
 };
 
 export const generateQuestionsForTestSet = async (context: string[]) => {
-	const questions = [];
 	const contextLength = context?.length;
-	const numExecutions = contextLength / 2;
-
+	const numExecutions = Math.ceil(contextLength / 4);
+	console.log('NUMBER OF EXEC', numExecutions);
 	const batchResults = await Promise.all(
 		Array(numExecutions)
 			.fill(null)
 			.map((_, index) => {
-				const contextToUse = context[index + 1]
-					? context[index] + context[index + 1]
-					: context[index];
-				return generate(contextToUse, index);
+				// Get the next 4 context strings for this batch
+				const startIdx = index * 4;
+				const contextBatch = context.slice(startIdx, startIdx + 4);
+				const combinedContext = contextBatch.join('');
+				return generate(combinedContext, index);
 			}),
 	);
-	for (const question of batchResults.flat()) {
-		questions.push(question);
-	}
-
-	return questions;
+	// Flatten the results from all batches
+	return batchResults.flat();
 };
 
 const generate = async (contextForGeneration: string, batchId: number) => {
-	console.info(`\n[Batch ${batchId}] Starting new batch generation`);
+	console.log(`\n[Batch ${batchId}] Starting new batch generation`);
 
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Selected random context:`,
 		JSON.stringify(contextForGeneration.slice(0, 200) + '...', null, 2),
 	);
 
 	const generatedQuestions = await generateQuestions(contextForGeneration);
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Generated initial questions:`,
 		JSON.stringify(generatedQuestions, null, 2),
 	);
@@ -76,7 +73,7 @@ const generate = async (contextForGeneration: string, batchId: number) => {
 		generatedQuestions,
 		contextForGeneration,
 	);
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Validated questions:`,
 		JSON.stringify(scoredQuestions, null, 2),
 	);
@@ -92,7 +89,7 @@ const generate = async (contextForGeneration: string, batchId: number) => {
 			return quality_and_clarity?.is_clear && relevance?.is_answerable;
 		},
 	);
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Accepted questions after filtering:`,
 		JSON.stringify(acceptedQuestions, null, 2),
 	);
@@ -105,7 +102,7 @@ const generate = async (contextForGeneration: string, batchId: number) => {
 		acceptedQuestionsResult,
 		contextForGeneration,
 	);
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Generated ground truth:`,
 		JSON.stringify(groundTruthResult, null, 2),
 	);
@@ -117,7 +114,7 @@ const generate = async (contextForGeneration: string, batchId: number) => {
 		groundTruth: groundTruthResult[i],
 	}));
 
-	console.info(
+	console.log(
 		`[Batch ${batchId}] Completed with questions:`,
 		JSON.stringify(finalQuestions, null, 2),
 	);

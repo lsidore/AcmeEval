@@ -1,6 +1,6 @@
 {
 	"name": "@acme-eval/core",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Opinionated framework that offers a simple and swift solution for RAG evaluation",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -42,8 +42,6 @@
 	"dependencies": {
 		"@ai-sdk/openai": "^0.0.72",
 		"ai": "^3.4.33",
-		"dirty-json": "^0.9.2",
-		"dotenv": "^16.4.5",
 		"ollama": "^0.5.2",
 		"openai": "^4.71.1",
 		"zod": "^3.23.8"

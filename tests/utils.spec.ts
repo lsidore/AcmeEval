@@ -55,7 +55,7 @@ describe.skip('Utils', () => {
 
 		it.skip('should clear the interval when the progress bar is complete', () => {
 			const spy = jest.spyOn(global, 'clearInterval');
-			console.info('progressBar.current', progressBar.current);
+			console.log('progressBar.current', progressBar.current);
 			progressBar.current = 10;
 			progressBar.update();
 			expect(spy).toHaveBeenCalled();

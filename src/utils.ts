@@ -50,7 +50,7 @@ export class Logger {
 	}
 
 	info(title: string, ...args: any[]) {
-		console.info(`\n\n`, `\x1b[33m`, title, `\x1b[0m:`, ...args);
+		console.log(`\n\n`, `\x1b[33m`, title, `\x1b[0m:`, ...args);
 	}
 }
 
