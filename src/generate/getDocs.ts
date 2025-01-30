@@ -53,9 +53,12 @@ export const getDocs = async (dir: string): Promise<Doc[]> => {
 	return results;
 };
 
-export const getRandom = <T>(array: T[]): T => {
+export const getRandom = (array: string[]): string => {
 	const randomIndex = Math.floor(Math.random() * array.length);
-	return array[randomIndex];
+	const plusOne = array[randomIndex + 1]
+		? array[randomIndex + 1]
+		: array[randomIndex - 1];
+	return `${array[randomIndex]}\n\n${plusOne}`;
 };
 
 export const getRandomChunk = (
@@ -88,6 +91,6 @@ export const getRandomPart = async (
 	dir: string,
 ): Promise<{ content: string; file: string }> => {
 	const docs = await getDocs(dir);
-	const randomDoc = getRandom(docs);
-	return getRandomChunk(randomDoc);
+	const randomDoc = getRandom(docs as any);
+	return getRandomChunk(randomDoc as any);
 };

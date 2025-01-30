@@ -10,7 +10,7 @@ import { checkForMissingFields } from '../utils';
 import {
 	getEvaluatedQuestions,
 	generate,
-	getGroundTruth,
+	getGroundTruths,
 	getGeneratedQuestions,
 } from '../llm/openai';
 
@@ -87,7 +87,9 @@ export const generateGroundTruth = async (
 		throw new Error('generateGroundTruth - No questions provided');
 	}
 
-	const result = await getGroundTruth(JSON.stringify({ context, questions }));
+	const result = await getGroundTruths(
+		JSON.stringify({ context, questions }),
+	);
 	const groundTruths = dirtyJson.parse(
 		result?.choices?.[0].message?.content ?? '{}',
 	);
