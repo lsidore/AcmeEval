@@ -11,6 +11,14 @@ export const getEvaluatedQuestions = (query: string) =>
 		maxTokens: 2048,
 		system: 'Evaluate an array of questions provided as a JSON string to determine their quality, clarity, and whether they can be effectively answered based on a provided context.\n\nAnalyze each question for three key aspects:\n\n1. **Relevance Evaluation**: Determine if each question is answerable using the given context, providing a detailed reasoning for why or why not.\n2. **Quality and Clarity Assessment**: Evaluate the formulation, specificity, and clarity of each question, and suggest improvements if applicable.\n3. **Scoring the Question**: Assign a score to each question based on its answerability and quality.\n\n# Steps\n\n1. **Review Context and Questions**:\n   - Analyze the provided context and each question.\n\n2. **Relevance Evaluation**:\n   - Determine if the context offers sufficient information to answer each question.\n   - Provide reasoning for your determination, including specific parts of the context that are relevant or missing.\n\n3. **Quality and Clarity Assessment**:\n   - Assess if the question is specific, clearly formulated, and easy to understand.\n   - Describe potential issues impacting question quality (e.g., ambiguity or lack of focus).\n   - Suggest improvements for enhancing clarity, if necessary.\n\n4. **Scoring**:\n   - Assign a score between 0.00 and 1.00 for each question (with two decimal precision).\n   - Questions that cannot be answered receive lower scores, with answerability fairness carrying the most weight.\n   - Consider quality and clarity, but weigh the ability to directly answer more heavily.\n\n# Notes\n\n- Address each question independently, ensuring distinct analysis for answerability, quality, and clarity.\n- Emphasize clarity on why a question is unanswerable, such as missing specific information, ambiguity, or irrelevance.\n- Prioritize the determination of answerability in scoring, but also consider clear question formulation as a secondary factor.',
 		output: 'array',
+		experimental_providerMetadata: {
+			openai: {
+				store: true,
+				metadata: {
+					custom: 'getEvaluatedQuestions',
+				},
+			},
+		},
 		messages: [
 			{
 				role: 'user',
@@ -88,6 +96,14 @@ export const getGroundTruths = (query: string) =>
 		model: openai('gpt-4o-mini', {
 			structuredOutputs: true,
 		}),
+		experimental_providerMetadata: {
+			openai: {
+				store: true,
+				metadata: {
+					custom: 'getGroundTruths',
+				},
+			},
+		},
 		temperature: 0.1,
 		maxTokens: 2048,
 		system: 'Evaluate an array of questions provided as a JSON string to determine their quality, clarity, and whether they can be effectively answered based on a provided context.\n\nAnalyze each question for three key aspects:\n\n1. **Relevance Evaluation**: Determine if each question is answerable using the given context, providing a detailed reasoning for why or why not.\n2. **Quality and Clarity Assessment**: Evaluate the formulation, specificity, and clarity of each question, and suggest improvements if applicable.\n3. **Scoring the Question**: Assign a score to each question based on its answerability and quality.\n\n# Steps\n\n1. **Review Context and Questions**:\n   - Analyze the provided context and each question.\n\n2. **Relevance Evaluation**:\n   - Determine if the context offers sufficient information to answer each question.\n   - Provide reasoning for your determination, including specific parts of the context that are relevant or missing.\n\n3. **Quality and Clarity Assessment**:\n   - Assess if the question is specific, clearly formulated, and easy to understand.\n   - Describe potential issues impacting question quality (e.g., ambiguity or lack of focus).\n   - Suggest improvements for enhancing clarity, if necessary.\n\n4. **Scoring**:\n   - Assign a score between 0.00 and 1.00 for each question (with two decimal precision).\n   - Questions that cannot be answered receive lower scores, with answerability fairness carrying the most weight.\n   - Consider quality and clarity, but weigh the ability to directly answer more heavily.\n\n# Notes\n\n- Address each question independently, ensuring distinct analysis for answerability, quality, and clarity.\n- Emphasize clarity on why a question is unanswerable, such as missing specific information, ambiguity, or irrelevance.\n- Prioritize the determination of answerability in scoring, but also consider clear question formulation as a secondary factor.',
@@ -131,6 +147,14 @@ export const getGeneratedQuestions = (context: string) =>
 		maxTokens: 2048,
 		system: 'Generate 3 questions that can be answered exhaustively from the given context.\n\nConsider the details presented within the given context, and construct questions where the answer can be derived in full from the given text. Ensure that the questions are meaningful and relevant to understand key concepts or important details from the provided information.\n\n# Steps\n\n1. **Read and Comprehend the Context**: Fully understand the details and information provided in the input context.\n2. **Extract Key Elements**: Identify the core ideas, concepts, procedures, or rules mentioned in the context.\n3. **Form the Questions**:\n   - Create questions that would help in retrieving the key information explicitly described in the text.\n   - Use different question starters such as "who," "what," "when," "how," or "why" to ensure the questions cover multiple aspects of the provided context.\n\n# Notes\n\n- Ensure the questions are fully answerable by the context alone, without requiring any external information.\n- Aim for questions that focus on different aspects of the content to provide well-rounded coverage.\n- Avoid asking repetitive questions or focusing too narrowly on a single piece of information.\n- Make sure the questions are clear, concise, and relevant to help in understanding the core information presented in the text.',
 		output: 'array',
+		experimental_providerMetadata: {
+			openai: {
+				store: true,
+				metadata: {
+					custom: 'getGeneratedQuestions',
+				},
+			},
+		},
 		messages: [
 			{
 				role: 'user',
@@ -163,6 +187,14 @@ export const getCorrectedQuestions = (query: string) =>
 		model: openai('gpt-4o-mini', {
 			structuredOutputs: true,
 		}),
+		experimental_providerMetadata: {
+			openai: {
+				store: true,
+				metadata: {
+					custom: 'getCorrectedQuestions',
+				},
+			},
+		},
 		temperature: 0.1,
 		maxTokens: 2048,
 		system: "Evaluate the student's answer based on the provided context and assign a score along with a feedback that encourages correct answers and provides constructive guidance on how to improve for incorrect answers.\n\n# Steps\n\n1. **Evaluate the Answer**:\n   - Compare the student's answer to the information provided in the context.\n   - Determine if the answer completely and accurately addresses the question based on the context.\n  \n2. **Assign a Score**:\n   - Assign a score of `0` for an incorrect or incomplete answer.\n   - Assign a score of `1` for a correct and complete answer.\n\n3. **Generate Feedback**:\n   - If the answer is incorrect or incomplete, provide constructive feedback. Explain why the answer is incorrect and suggest how it can be improved.\n   - If the answer is correct, include an encouraging statement recognizing the student's accurate response.\n\n# Notes\n\n- Only use the provided context in determining the accuracy and providing corrections.\n- Feedback for an incorrect answer should be constructive, with a clear and direct explanation on how to improve.\n- Positive and straightforward encouragement is expected when the student's answer is correct.",
