@@ -38,15 +38,15 @@ export const generateTestSet = async (pathToDoc: string) => {
 
 export const generateQuestionsForTestSet = async (context: string[]) => {
 	const contextLength = context?.length;
-	const numExecutions = Math.ceil(contextLength / 4);
+	const numExecutions = Math.ceil(contextLength / 8);
 	console.log('NUMBER OF EXEC', numExecutions);
 	const batchResults = await Promise.all(
 		Array(numExecutions)
 			.fill(null)
 			.map((_, index) => {
 				// Get the next 4 context strings for this batch
-				const startIdx = index * 4;
-				const contextBatch = context.slice(startIdx, startIdx + 4);
+				const startIdx = index * 8;
+				const contextBatch = context.slice(startIdx, startIdx + 8);
 				const combinedContext = contextBatch.join('');
 				return generate(combinedContext, index);
 			}),
