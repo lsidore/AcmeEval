@@ -1,15 +1,19 @@
-import dirtyJson from 'dirty-json';
-import { getCorrectedQuestions } from '../llm/openai';
+import { getCorrectedQuestions } from '../llm/generate';
 import { checkForMissingFields } from '../utils';
 type QnA = { question: string; context: string; answer: string };
 export const generateCorrection = async (qna: QnA) => {
 	checkForMissingFields({ qna }, 'generateCorrection');
 
-	const result = await getCorrectedQuestions(JSON.stringify({ qna }));
-	const correction = dirtyJson.parse(
-		result?.choices?.[0].message?.content ?? '{}',
+	const {
+		object: correction,
+		usage,
+		warnings,
+	} = await getCorrectedQuestions(JSON.stringify({ qna }));
+
+	console.info(
+		'\ncorrection',
+		JSON.stringify({ correction, usage, warnings }, null, 2),
 	);
-	console.info('\ncorrection', JSON.stringify(correction, null, 2));
 	return correction;
 };
 
